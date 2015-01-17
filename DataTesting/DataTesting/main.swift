@@ -10,11 +10,34 @@ import Foundation
 
 class node: NSObject{
     var index:Int
+    var payload: dataObject
     override var description:String{
         return "\(self.index)"
     }
     init(index:Int){
         self.index = index
+        self.payload = dataObject()
+    }
+}
+
+class dataObject: NSObject {
+    
+}
+
+class tree: NSObject {
+    var root: node? = nil
+    var height: Int
+    var isEmpty: Bool
+    override init() {
+        isEmpty = true
+        height = 0
+    }
+    
+    func insert(newNode:node){
+        
+    }
+    func search()->node?{
+        return nil
     }
 }
 
@@ -55,6 +78,8 @@ class Sorter{
 }
 
 
+
+
 class DataManagerObject: NSObject{
     var isEmpy:Bool = true
     var data:[node] = []
@@ -75,4 +100,3 @@ class DataManagerObject: NSObject{
 var smallDataSet = [4,3,5,7,9,23,456,234,32,74,45,134,743,7956,3456,4211,323,412,55454,37,654,342,36,12412]
 
 var manager = DataManagerObject(newData: smallDataSet)
-println(manager)
