@@ -11,6 +11,7 @@ import Foundation
 class node: NSObject{
     var index:Int
     var payload: dataObject
+    var next: node? = nil
     override var description:String{
         return "\(self.index)"
     }
@@ -23,6 +24,7 @@ class node: NSObject{
 class dataObject: NSObject {
     
 }
+
 
 class tree: NSObject {
     var root: node? = nil
@@ -38,6 +40,52 @@ class tree: NSObject {
     }
     func search()->node?{
         return nil
+    }
+}
+
+class linkedList: NSObject {
+    var head: node? = nil
+    var tail: node? = nil
+    var length: Int
+    override init(){
+        self.length = 1
+    }
+    func insertAtEnd(newNode:node){
+        if let hasHad = self.head{
+            self.tail?.next = newNode
+            self.tail = newNode
+        }else{
+            self.head = newNode
+            self.tail = self.head
+        }
+        self.length++
+    }
+}
+
+
+class graph: NSObject {
+    var isEmpty = true
+    var adjList:[(neighborlist: linkedList, nodeIndex: Int)] = []
+    var numberOfEdges: Int
+    var numberOfVertecies: Int
+    var directed: Bool
+    override init() {
+        self.numberOfEdges = 0
+        self.numberOfVertecies = 0
+        self.directed = true
+    }
+    init(directed:Bool) {
+        self.numberOfEdges = 0
+        self.numberOfVertecies = 0
+        self.directed = directed
+    }
+    func insert(newNode:node){
+        if self.isEmpty{
+            var newNeighborList = linkedList()
+            newNeighborList.insertAtEnd(newNode)
+            self.adjList.insert((newNeighborList, newNode.index), atIndex: self.adjList.count-1)
+            self.isEmpty = false
+        }
     }
 }
 
