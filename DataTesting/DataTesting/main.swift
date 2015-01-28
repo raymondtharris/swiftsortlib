@@ -60,6 +60,50 @@ class linkedList: NSObject {
         }
         self.length++
     }
+    func search(nodeToSearchFor:node)->node?{
+        var current = self.head
+        while(current != nil){
+            if current == nodeToSearchFor{
+                return current
+            }else{
+                current = current?.next
+            }
+        }
+        
+        return nil
+    }
+    func searchByIndex(nodeToSearchForIndex:Int)->node?{
+        var current = self.head
+        while(current != nil){
+            if current?.index == nodeToSearchForIndex{
+                return current
+            }else{
+                current = current?.next
+            }
+        }
+        return nil
+    }
+    
+    func remove(nodeToRemove:node)->Bool{
+        var current = self.head
+        if current == nodeToRemove{
+            current?.next = self.head
+            self.length--
+            return true
+        }
+        while current != nil {
+            if current?.next  == nodeToRemove{
+                var temp = current?.next
+                current?.next = temp?.next
+                temp?.next = nil
+                self.length--
+                return true
+            }else{
+                current = current?.next
+            }
+        }
+        return false
+    }
 }
 
 
@@ -87,6 +131,16 @@ class graph: NSObject {
             self.isEmpty = false
         }
     }
+    func insertNeighbor(fromNode:node, toNode:node){
+        for obj in adjList{
+            if obj.nodeIndex == fromNode.index{
+                obj.neighborlist.insertAtEnd(toNode)
+            }
+        }
+    }
+    
+    
+    
 }
 
 class Sorter{
