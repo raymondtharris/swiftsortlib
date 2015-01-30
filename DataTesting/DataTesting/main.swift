@@ -140,7 +140,13 @@ class graph: NSObject {
     }
     
     
-    
+    func removeNeighbor(fromNode:node, betweenNode:node){
+        for obj in adjList{
+            if obj.nodeIndex == fromNode.index{
+                obj.neighborlist.remove(betweenNode)
+            }
+        }
+    }
 }
 
 class Sorter{
