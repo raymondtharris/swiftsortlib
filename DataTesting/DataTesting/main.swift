@@ -8,16 +8,20 @@
 
 import Foundation
 
-class node: NSObject{
+class node: NSObject, NSCopying{
     var index:Int
     var payload: dataObject
     var next: node? = nil
     override var description:String{
         return "\(self.index)"
     }
-    init(index:Int){
+    required init(index:Int){
         self.index = index
         self.payload = dataObject()
+    }
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        var objCopy = self.dynamicType(index: self.index)
+        return objCopy
     }
 }
 
@@ -50,7 +54,17 @@ class linkedList: NSObject {
     override init(){
         self.length = 1
     }
+    override var description:String{
+        var curr = self.head
+        var pstr = ""
+        while curr != nil{
+            pstr += "\( curr!.index)-> "
+            curr = curr?.next
+        }
+        return pstr
+    }
     func insertAtEnd(newNode:node){
+        
         if let hasHad = self.head{
             self.tail?.next = newNode
             self.tail = newNode
@@ -110,6 +124,7 @@ class linkedList: NSObject {
 class graph: NSObject {
     var isEmpty = true
     var adjList:[(neighborlist: linkedList, nodeIndex: Int)] = []
+    var path: [node] = [node]()
     var numberOfEdges: Int
     var numberOfVertecies: Int
     var directed: Bool
@@ -127,16 +142,41 @@ class graph: NSObject {
         if self.isEmpty{
             var newNeighborList = linkedList()
             newNeighborList.insertAtEnd(newNode)
-            self.adjList.insert((newNeighborList, newNode.index), atIndex: self.adjList.count-1)
+            self.adjList.insert((newNeighborList, newNode.index), atIndex: self.adjList.count)
             self.isEmpty = false
+        }else{
+            var newNeighborList = linkedList()
+            newNeighborList.insertAtEnd(newNode)
+            self.adjList.insert((newNeighborList, newNode.index), atIndex: self.adjList.count)
         }
+        self.numberOfVertecies++
     }
-    func insertNeighbor(fromNode:node, toNode:node){
-        for obj in adjList{
-            if obj.nodeIndex == fromNode.index{
-                obj.neighborlist.insertAtEnd(toNode)
+    func remove(nodeToRemove:node){
+        for obj in self.adjList{
+            if obj.nodeIndex ==  nodeToRemove.index{
+                var current = obj.neighborlist.head?.next
+                while current != nil{
+                    for obj2 in self.adjList{
+                        if obj2.nodeIndex == current?.index{
+                            obj2.neighborlist.remove(nodeToRemove)
+                        }
+                    }
+                    current = current?.next
+                }
             }
         }
+        self.numberOfVertecies--
+    }
+    
+    func insertNeighbor(fromNode:node, toNode:node){
+        var toNodeCopy = toNode.copy() as node
+        
+        for obj in adjList{
+            if obj.nodeIndex == fromNode.index{
+                obj.neighborlist.insertAtEnd(toNodeCopy)
+            }
+        }
+        self.numberOfEdges++
     }
     
     
@@ -147,7 +187,12 @@ class graph: NSObject {
             }
         }
     }
+    func findShortestPath(fromStart:node, toGoal:node){
+        
+    }
 }
+
+
 
 class Sorter{
     var dataInUse:[node]
@@ -208,3 +253,21 @@ class DataManagerObject: NSObject{
 var smallDataSet = [4,3,5,7,9,23,456,234,32,74,45,134,743,7956,3456,4211,323,412,55454,37,654,342,36,12412]
 
 var manager = DataManagerObject(newData: smallDataSet)
+
+var g1 = graph()
+
+var n1 = node(index: 5)
+var n2 = node(index: 8)
+var n3 = node(index: 10)
+var n4 = node(index: 2)
+
+g1.insert(n1)
+g1.insert(n2)
+g1.insert(n3)
+g1.insert(n4)
+g1.insertNeighbor(n1, toNode: n3)
+g1.insertNeighbor(n3, toNode: n2)
+g1.insertNeighbor(n2, toNode: n4)
+println(g1.adjList)
+
+
