@@ -65,7 +65,7 @@ class linkedList: NSObject {
     }
     func insertAtEnd(newNode:node){
         
-        if let hasHad = self.head{
+        if let hasHead = self.head{
             self.tail?.next = newNode
             self.tail = newNode
         }else{
@@ -117,6 +117,55 @@ class linkedList: NSObject {
             }
         }
         return false
+    }
+}
+
+class queue: NSObject {
+    var head:node? = nil
+    var tail:node? = nil
+    var length:Int = 0
+    var isEmpty:Bool{
+        if self.length > 0 {
+            return true
+        } else{
+            return false
+        }
+    }
+    override var description:String{
+        var curr = self.head
+        var pstr = ""
+        while curr != nil{
+            pstr += "\( curr!.index)-> "
+            curr = curr?.next
+        }
+        return pstr
+    }
+    override init() {
+        
+    }
+    func enqueue(nodeToInsert:node){
+        if let hasHead = self.head{
+            self.tail?.next = nodeToInsert
+            self.tail = nodeToInsert
+        }else{
+            //println("empty")
+            self.head = nodeToInsert
+            self.tail = self.head
+        }
+        self.length++
+        //println(self.length)
+    }
+    func dequeue()->node?{
+        if let hasHead = self.head{
+            self.head = self.head?.next
+            self.length--
+            //println(self.length)
+            return hasHead
+        }else{
+            self.head = nil
+            self.tail = nil
+            return nil
+        }
     }
 }
 
@@ -187,7 +236,53 @@ class graph: NSObject {
             }
         }
     }
+    func search(nodeToFind:node)->node?{
+        for obj in adjList{
+            if obj.nodeIndex == nodeToFind.index{
+                return obj.neighborlist.head
+            }
+        }
+        return nil
+    }
+    
     func findShortestPath(fromStart:node, toGoal:node){
+        //println(toGoal)
+        var tempPath = queue()
+        var tempArr = [Int]()
+        var current = search(fromStart)
+        tempArr.append(current!.index)
+        var tempN = current?.copy() as node
+        println(tempN.next)
+        tempPath.enqueue(tempN)
+        while tempPath.length > 0 {
+           // println(tempArr)
+            var tempNode = tempPath.dequeue()
+            //println(tempNode!.next)
+            if tempNode?.index == toGoal.index{
+                //println(tempPath)
+                self.path.append(tempNode!)
+                
+            }else{
+                while current?.next != nil{
+                    //println(tempNode!.next)
+                    
+                   tempNode = current?.next
+                    var check = false
+                    for objs in tempArr{
+                        if objs == tempNode?.index{
+                            check = true
+                        }
+                    }
+                    if check != true {
+                        tempArr.append(tempNode!.index)
+                        println("end \(tempPath)")
+                        current = search(tempNode!)
+                        tempPath.enqueue(current!)
+                        println(tempArr)
+                    }
+                }
+            }
+        }
         
     }
 }
@@ -269,5 +364,15 @@ g1.insertNeighbor(n1, toNode: n3)
 g1.insertNeighbor(n3, toNode: n2)
 g1.insertNeighbor(n2, toNode: n4)
 println(g1.adjList)
+
+g1.findShortestPath(n1, toGoal: n4)
+
+var t1 = queue()
+t1.enqueue(n1)
+t1.dequeue()
+t1.enqueue(n3)
+//println(t1)
+
+//println(g1.path)
 
 
