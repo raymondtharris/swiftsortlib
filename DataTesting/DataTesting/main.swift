@@ -246,14 +246,15 @@ class graph: NSObject {
     }
     
     func findShortestPath(fromStart:node, toGoal:node){
-        //println(toGoal)
         var tempPath = queue()
         var tempArr = [Int]()
         var current = search(fromStart)
+        
         tempArr.append(current!.index)
         var tempN = current?.copy() as node
-        println(tempN.next)
+        
         tempPath.enqueue(tempN)
+        
         while tempPath.length > 0 {
            // println(tempArr)
             var tempNode = tempPath.dequeue()
@@ -263,25 +264,31 @@ class graph: NSObject {
                 self.path.append(tempNode!)
                 
             }else{
+                current = search(tempNode!)
+                //println(current!)
                 while current?.next != nil{
-                    //println(tempNode!.next)
-                    
-                   tempNode = current?.next
+                    println(current!)
+                   current = current?.next
+                   
                     var check = false
                     for objs in tempArr{
-                        if objs == tempNode?.index{
+                        if objs == current?.index{
                             check = true
                         }
                     }
+        
                     if check != true {
-                        tempArr.append(tempNode!.index)
-                        println("end \(tempPath)")
-                        current = search(tempNode!)
-                        tempPath.enqueue(current!)
+                        tempArr.append(current!.index)
+                        //println("end \(current!)")
+                        tempNode = search(current!)
+                        tempPath.enqueue(tempNode!.copy() as node)
                         println(tempArr)
                     }
+                    
+                    
                 }
             }
+            
         }
         
     }
@@ -355,14 +362,18 @@ var n1 = node(index: 5)
 var n2 = node(index: 8)
 var n3 = node(index: 10)
 var n4 = node(index: 2)
+var n5 = node(index: 4)
 
 g1.insert(n1)
 g1.insert(n2)
 g1.insert(n3)
 g1.insert(n4)
+g1.insert(n5)
 g1.insertNeighbor(n1, toNode: n3)
 g1.insertNeighbor(n3, toNode: n2)
 g1.insertNeighbor(n2, toNode: n4)
+g1.insertNeighbor(n1, toNode: n5)
+g1.insertNeighbor(n5, toNode: n4)
 println(g1.adjList)
 
 g1.findShortestPath(n1, toGoal: n4)
