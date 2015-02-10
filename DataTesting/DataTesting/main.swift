@@ -245,7 +245,7 @@ class graph: NSObject {
         return nil
     }
     
-    func findShortestPath(fromStart:node, toGoal:node){
+    func BFS(fromStart:node, toGoal:node)->node?{
         var tempPath = queue()
         var tempArr = [Int]()
         var current = search(fromStart)
@@ -256,18 +256,14 @@ class graph: NSObject {
         tempPath.enqueue(tempN)
         
         while tempPath.length > 0 {
-           // println(tempArr)
             var tempNode = tempPath.dequeue()
-            //println(tempNode!.next)
             if tempNode?.index == toGoal.index{
-                //println(tempPath)
                 self.path.append(tempNode!)
-                
+                return tempNode!
             }else{
                 current = search(tempNode!)
-                //println(current!)
                 while current?.next != nil{
-                    println(current!)
+                    println(" \(current!) -> \(current!.next!) ")
                    current = current?.next
                    
                     var check = false
@@ -279,18 +275,14 @@ class graph: NSObject {
         
                     if check != true {
                         tempArr.append(current!.index)
-                        //println("end \(current!)")
                         tempNode = search(current!)
                         tempPath.enqueue(tempNode!.copy() as node)
-                        println(tempArr)
                     }
-                    
-                    
                 }
             }
             
         }
-        
+        return nil
     }
 }
 
@@ -373,10 +365,10 @@ g1.insertNeighbor(n1, toNode: n3)
 g1.insertNeighbor(n3, toNode: n2)
 g1.insertNeighbor(n2, toNode: n4)
 g1.insertNeighbor(n1, toNode: n5)
-g1.insertNeighbor(n5, toNode: n4)
+//g1.insertNeighbor(n5, toNode: n4)
 println(g1.adjList)
 
-g1.findShortestPath(n1, toGoal: n4)
+g1.BFS(n1, toGoal: n4)
 
 var t1 = queue()
 t1.enqueue(n1)
@@ -384,6 +376,6 @@ t1.dequeue()
 t1.enqueue(n3)
 //println(t1)
 
-//println(g1.path)
+println(g1.path)
 
 
