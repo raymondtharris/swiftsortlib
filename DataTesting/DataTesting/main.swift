@@ -258,13 +258,13 @@ class graph: NSObject {
         while tempPath.length > 0 {
             var tempNode = tempPath.dequeue()
             if tempNode?.index == toGoal.index{
-                self.path.append(tempNode!)
+                //self.path.append(tempNode!)
                 return tempNode!
             }else{
                 current = search(tempNode!)
                 while current?.next != nil{
-                    println(" \(current!) -> \(current!.next!) ")
-                   current = current?.next
+                    //println(" \(current!) -> \(current!.next!) ")
+                    current = current?.next
                    
                     var check = false
                     for objs in tempArr{
@@ -284,6 +284,85 @@ class graph: NSObject {
         }
         return nil
     }
+    func shortestPath(fromStart:node, toGoal:node){
+        var unvisited:[(nodeIndex:Int, distance:Int)] = []
+        var visited:[(nodeIndex:Int, distance:Int)] = []
+        for obj in adjList {
+            if obj.nodeIndex == fromStart.index{
+                unvisited.insert((obj.nodeIndex, 0), atIndex: unvisited.count)
+            }else{
+                unvisited.insert((obj.nodeIndex, 1000), atIndex: unvisited.count)
+            }
+            
+        }
+        //println(unvisited)
+        
+        var tempQueue = queue()
+        var current = search(fromStart)
+        var index:Int = 0
+        var goalFound = false
+        
+        while !goalFound{
+            var currentCheck = current
+            var headNode:(nodeIndex:Int, distance:Int)
+            var chek:Int = 0
+            for var i = 0 ;i < unvisited.count; i++  {
+                if unvisited[i].nodeIndex == currentCheck?.index {
+                    chek = i
+                }
+            }
+            headNode = (unvisited[chek].nodeIndex, unvisited[chek].distance)
+            while currentCheck != nil{
+                for var i = 0 ;i < unvisited.count; i++ {
+                    if unvisited[i].nodeIndex == currentCheck?.index  && unvisited[i].distance > headNode.distance {
+                        //if let newVal = headNode {
+                        unvisited[i].distance = headNode.distance + 1
+                        //}
+                    }
+                }
+                currentCheck = currentCheck?.next
+                if let newt = currentCheck{
+                    tempQueue.enqueue(currentCheck!)
+                }
+            }
+            
+            
+            var i=0
+            for obj in unvisited{
+                if obj.nodeIndex == current?.index{
+                    if obj.distance >= index {
+                        //index++
+                    }
+                    visited.append(obj)
+                    unvisited.removeAtIndex(i)
+                }
+                i++
+            }
+            //println(unvisited)
+            //println(visited)
+            //index++
+            //println(tempQueue)
+            current = search(tempQueue.dequeue()!)
+            
+            
+            if current?.index == toGoal.index {
+                goalFound = true
+                var c=0
+                for obj in unvisited{
+                    if obj.nodeIndex == current?.index{
+                        visited.append(obj)
+                        unvisited.removeAtIndex(c)
+                    }
+                    c++
+                }
+            }
+
+        }
+        println(visited)
+        
+        
+    }
+    
 }
 
 
@@ -365,17 +444,11 @@ g1.insertNeighbor(n1, toNode: n3)
 g1.insertNeighbor(n3, toNode: n2)
 g1.insertNeighbor(n2, toNode: n4)
 g1.insertNeighbor(n1, toNode: n5)
-//g1.insertNeighbor(n5, toNode: n4)
+g1.insertNeighbor(n5, toNode: n4)
 println(g1.adjList)
 
-g1.BFS(n1, toGoal: n4)
+//g1.BFS(n1, toGoal: n4)
 
-var t1 = queue()
-t1.enqueue(n1)
-t1.dequeue()
-t1.enqueue(n3)
-//println(t1)
-
-println(g1.path)
+g1.shortestPath(n1, toGoal: n4)
 
 
