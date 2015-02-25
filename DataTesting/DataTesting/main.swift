@@ -30,6 +30,20 @@ class dataObject: NSObject {
 }
 
 
+class trNode: NSObject {
+    var index:Int
+    var left:trNode? = nil
+    var right:trNode? = nil
+    var neighbors = 0
+    var cost:Int = 1
+    override var description:String{
+        return "\(self.index)"
+    }
+    init(index:Int) {
+        self.index = index
+    }
+}
+
 class tree: NSObject {
     var root: node? = nil
     var height: Int
@@ -40,7 +54,11 @@ class tree: NSObject {
     }
     
     func insert(newNode:node){
-        
+        if let hasroot = root{
+            
+        }else{
+            root = newNode
+        }
     }
     func search()->node?{
         return nil
