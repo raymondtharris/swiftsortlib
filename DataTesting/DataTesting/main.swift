@@ -29,23 +29,30 @@ class dataObject: NSObject {
     
 }
 
+enum nodeColor:Int{
+    case red = 1
+    case black = 2
+
+}
 
 class trNode: NSObject {
-    var index:Int
-    var left:trNode? = nil
-    var right:trNode? = nil
-    var neighbors = 0
-    var cost:Int = 1
+    var index:Int //index is used for node comparison within tree data structure
+    var left:trNode? = nil //left child of current node
+    var right:trNode? = nil // right child of current node
+    var neighbors = 0 //list structure to contain neighbors of current node within graph data structure
+    var cost:Int = 1 //edge cost of current node
+    var color:nodeColor = nodeColor.red //color for node in red-black tree
     override var description:String{
         return "\(self.index)"
     }
     init(index:Int) {
         self.index = index
+
     }
 }
 
-class tree: NSObject {
-    var root: node? = nil
+class tree: NSObject { //red-black tree implementation
+    var root: trNode? = nil
     var height: Int
     var isEmpty: Bool
     override init() {
@@ -53,13 +60,14 @@ class tree: NSObject {
         height = 0
     }
     
-    func insert(newNode:node){
-        if let hasroot = root{
-            
-        }else{
-            root = newNode
-        }
+    func insert(newNode:trNode){
+        var temp1:trNode
+        var temp2:trNode = self.root!
+        
+                
+       
     }
+    
     func search()->node?{
         return nil
     }
@@ -236,7 +244,7 @@ class graph: NSObject {
     }
     
     func insertNeighbor(fromNode:node, toNode:node){
-        var toNodeCopy = toNode.copy() as node
+        var toNodeCopy = toNode.copy() as! node
         
         for obj in adjList{
             if obj.nodeIndex == fromNode.index{
@@ -269,7 +277,7 @@ class graph: NSObject {
         var current = search(fromStart)
         
         tempArr.append(current!.index)
-        var tempN = current?.copy() as node
+        var tempN = current?.copy() as! node
         
         tempPath.enqueue(tempN)
         
@@ -294,7 +302,7 @@ class graph: NSObject {
                     if check != true {
                         tempArr.append(current!.index)
                         tempNode = search(current!)
-                        tempPath.enqueue(tempNode!.copy() as node)
+                        tempPath.enqueue(tempNode!.copy() as! node)
                     }
                 }
             }
